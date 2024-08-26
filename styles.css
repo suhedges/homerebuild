@@ -12,6 +12,7 @@ body {
     font-family: 'Roboto', sans-serif;
     background-color: #053856;
     color: #ecf0f1;
+    font-size: 14px;
     padding: 20px;
     overflow-y: auto;
     height: 100vh; /* Sidebar takes the full height of the viewport */
@@ -62,10 +63,10 @@ body {
     gap: 20px;
 }
 .category-item {
-    width: 150px;
+    width: 100px;
     text-align: center;
     margin-bottom: 20px;
-    transition: transform 0.3s ease-in, box-shadow 0.3s ease-in; /* Animation for zoom and shadow */
+    transition: transform 0.3s ease-in, box-shadow 0.3s ease-in; 
 }
 .category-item a {
     text-decoration: none;
@@ -76,23 +77,23 @@ body {
     align-items: center;
 }
 .category-item img {
-    height: 90px; /* Set image height to 90px */
+    height: 50px; /* Set image height to 90px */
     width: auto;
     max-width: 100%;
     border-radius: 15px; /* Add rounded corners */
-    transition: border-radius 0.1s ease-in;
+    transition: border-radius 0.6s ease-in;
 }
 .category-item .category-name {
     margin-top: 10px;
     text-align: center;
-    font-size: 12px; /* Set font size to 14px */
+    font-size: 12px; 
 }
 .category-item:hover {
     transform: scale(1.05); /* Zoom effect on hover */
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
     border-radius: 10px; /* Add rounded corners */
-    transition: border-radius 0.3s ease-in;
-    transition: transform 0.3s ease-in;
+    transition: border-radius 0.2s ease-in;
+    transition: transform 0.2s ease-in;
 }
 .category-item:hover img {
     border-radius: 15px; /* Slightly more rounded corners on hover */
