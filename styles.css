@@ -31,9 +31,6 @@ body {
     padding: 5px 0;
     cursor: pointer;
 }
-.sidebar a.all-categories-btn {
-    font-weight: bold;
-}
 .content {
     flex: 1;
     padding: 20px;
@@ -43,6 +40,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center; /* Center the grouping containers horizontally */
+}
+.initial-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Ensure it takes full height */
+    font-size: 35px;
+    color: #2c3e50;
+    text-align: center;
+}
+.initial-message .arrow {
+    margin-top: 20px;
+    font-size: 35px; /* Ensure arrow size matches text size */
 }
 .category-group-container {
     width: 100%;
@@ -81,12 +92,12 @@ body {
     width: auto;
     max-width: 100%;
     border-radius: 15px; /* Add rounded corners */
-    transition: border-radius 0.6s ease-in;
+    transition: border-radius 0.1s ease-in;
 }
 .category-item .category-name {
     margin-top: 10px;
     text-align: center;
-    font-size: 12px; 
+    font-size: 12px; /* Set font size to 14px */
 }
 .category-item:hover {
     transform: scale(1.05); /* Zoom effect on hover */
