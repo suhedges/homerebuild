@@ -1,0 +1,100 @@
+
+body {
+    display: flex;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #ecf0f1;
+    height: 100vh; /* Make sure the body fills the entire viewport height */
+}
+.sidebar {
+    width: 250px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #053856;
+    color: #ecf0f1;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh; /* Sidebar takes the full height of the viewport */
+    position: fixed; /* Sidebar stays in place while scrolling */
+    top: 0;
+    left: 0;
+}
+.sidebar h2 {
+    margin-top: 0;
+}
+.sidebar a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: block;
+    margin: 10px 0;
+    padding: 5px 0;
+    cursor: pointer;
+}
+.sidebar a.all-categories-btn {
+    font-weight: bold;
+}
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff; /* Set main body background to white */
+    overflow-y: auto;
+    margin-left: 270px; /* Adjust to leave space for the fixed sidebar */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the grouping containers horizontally */
+}
+.category-group-container {
+    width: 100%;
+    max-width: 1000px; /* Set a max width for the category group containers */
+    margin-bottom: 40px;
+}
+.category-group {
+    text-align: left; /* Align the content within the container to the left */
+}
+.category-header {
+    padding: 10px 0; /* Set default padding for the header */
+    margin-left: 20px; /* Adjust this margin for spacing */
+}
+.category-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Align child categories to the left */
+    gap: 20px;
+}
+.category-item {
+    width: 150px;
+    text-align: center;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in, box-shadow 0.3s ease-in; /* Animation for zoom and shadow */
+}
+.category-item a {
+    text-decoration: none;
+    color: #2c3e50;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.category-item img {
+    height: 90px; /* Set image height to 90px */
+    width: auto;
+    max-width: 100%;
+    border-radius: 15px; /* Add rounded corners */
+    transition: border-radius 0.1s ease-in;
+}
+.category-item .category-name {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px; /* Set font size to 14px */
+}
+.category-item:hover {
+    transform: scale(1.05); /* Zoom effect on hover */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); /* Shadow effect on hover */
+    border-radius: 10px; /* Add rounded corners */
+    transition: border-radius 0.3s ease-in;
+    transition: transform 0.3s ease-in;
+}
+.category-item:hover img {
+    border-radius: 15px; /* Slightly more rounded corners on hover */
+}
+    
