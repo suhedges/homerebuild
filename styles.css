@@ -116,13 +116,13 @@ body {
 }
 
 .search-button {
-    position: absolute;
+    position: fixed; 
     top: 20px;
-    left: 20px;
-    width: 40px;  
+    left: 300px;
+    width: 40px;
     height: 40px;
-    background-color: #053856; 
-    border-radius: 5px;  
+    background-color: #FAFAFA;
+    border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -137,39 +137,27 @@ body {
     filter: invert(0);
 }
 .search-button:hover {
-    animation: rubberBand 0.8s ease infinite;
+    animation: puffUp 0.8s ease infinite;
 }
-@keyframes rubberBand {
-    0% {
-        transform: scale(1.1);
-    }
-    30% {
-        transform: scale(1.25, 0.75);
-    }
-    40% {
-        transform: scale(0.75, 1.25);
+
+@keyframes puffUp {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     50% {
-        transform: scale(1.15, 0.85);
-    }
-    65% {
-        transform: scale(0.95, 1.05);
-    }
-    75% {
-        transform: scale(1.05, 0.95);
-    }
-    100% {
-        transform: scale(1);
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     }
 }
 .search-bar {
-    position: absolute;
+    position: fixed; 
     top: 20px;
-    left: 20px;
-    width: 40px;  /* Start as a square */
+    left: 300px;
+    width: 40px;
     height: 40px;
     background-color: #ecf0f1;
-    border-radius: 5px;  
+    border-radius: 5px;
     display: none;
     align-items: center;
     justify-content: space-between;
@@ -187,6 +175,10 @@ body {
     width: 20px;
     height: 20px;
     cursor: pointer;
+    transition: transform 0.3s ease-in-out; /* Add transition for smooth rotation */
+}
+.search-bar img:hover {
+    transform: rotate(90deg); /* Rotate 90 degrees on hover */
 }
 .search-bar input {
     flex: 1;
