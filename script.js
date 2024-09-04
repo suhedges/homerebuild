@@ -1,19 +1,31 @@
 
+let lastSelectedCategory = null; 
+let isSearchActive = false; 
+
 function filterCategories(category) {
-    const allGroups = document.querySelectorAll('.category-group-container, .category-item');
+    const allGroups = document.querySelectorAll('.category-group-container');
     const initialMessage = document.getElementById('initial-message');
 
-    // Show the "Select a Category" message when a category is selected from the sidebar
+    // Hide "Select a Category" message and show the selected category
     if (category) {
+        lastSelectedCategory = category; // Store the category selected before searching
         initialMessage.style.display = 'none';
+        showCategory(category); // Show the selected category
     }
 
-    // Toggle visibility of category groups based on selected category
+    // Hide all other categories
+    allGroups.forEach(group => {
+        if (group.dataset.category !== category) {
+            group.style.display = 'none';
+        }
+    });
+}
+
+function showCategory(category) {
+    const allGroups = document.querySelectorAll('.category-group-container');
     allGroups.forEach(group => {
         if (group.dataset.category === category) {
-            group.style.display = 'block';
-        } else {
-            group.style.display = 'none';
+            group.style.display = 'block'; // Show the category that matches
         }
     });
 }
@@ -36,53 +48,61 @@ function filterBySearch() {
     const searchInput = document.getElementById('search-input').value.toLowerCase();
     const categoryGroups = document.querySelectorAll('.category-group-container');
     const initialMessage = document.getElementById('initial-message');
+    isSearchActive = !!searchInput; // Update search active flag
 
     if (searchInput) {
-        initialMessage.style.display = 'none';
-    } else {
-        initialMessage.style.display = 'flex';
-        hideAllCategories(); // Hide all categories if search is cleared
-        return;
-    }
+        initialMessage.style.display = 'none'; // Hide the initial message during search
+        categoryGroups.forEach(group => {
+            let groupMatchFound = false;
+            const penultimateGroups = group.querySelectorAll('.category-group');
+            
+            penultimateGroups.forEach(penultimateGroup => {
+                let penultimateMatchFound = false;
+                const childItems = penultimateGroup.querySelectorAll('.category-item');
 
-    categoryGroups.forEach(group => {
-        let groupMatchFound = false;
-        const penultimateGroups = group.querySelectorAll('.category-group');
-        
-        penultimateGroups.forEach(penultimateGroup => {
-            let penultimateMatchFound = false;
-            const childItems = penultimateGroup.querySelectorAll('.category-item');
+                childItems.forEach(item => {
+                    const itemName = item.textContent.toLowerCase();
+                    if (itemName.includes(searchInput)) {
+                        item.style.display = 'block';
+                        penultimateMatchFound = true;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
 
-            childItems.forEach(item => {
-                const itemName = item.textContent.toLowerCase();
-                if (itemName.includes(searchInput)) {
-                    item.style.display = 'block';
-                    penultimateMatchFound = true;
+                if (penultimateMatchFound) {
+                    penultimateGroup.style.display = 'block';
+                    groupMatchFound = true;
                 } else {
-                    item.style.display = 'none';
+                    penultimateGroup.style.display = 'none';
                 }
             });
 
-            if (penultimateMatchFound) {
-                penultimateGroup.style.display = 'block';
-                groupMatchFound = true;
+            if (groupMatchFound) {
+                group.style.display = 'block';
             } else {
-                penultimateGroup.style.display = 'none';
+                group.style.display = 'none';
             }
         });
-
-        if (groupMatchFound) {
-            group.style.display = 'block';
+    } else {
+        // Restore state when search input is cleared
+        if (lastSelectedCategory) {
+            showCategory(lastSelectedCategory); // Restore the last selected category
         } else {
-            group.style.display = 'none';
+            initialMessage.style.display = 'flex'; // Show "Select a Category" if no category selected
         }
-    });
+        hideAllCategories(); // Hide all categories except the restored one
+    }
 }
 
 function hideAllCategories() {
     const categoryGroups = document.querySelectorAll('.category-group-container');
     categoryGroups.forEach(group => {
-        group.style.display = 'none';
+        if (!isSearchActive && group.dataset.category === lastSelectedCategory) {
+            group.style.display = 'block'; // Keep the last selected category visible if search is not active
+        } else {
+            group.style.display = 'none'; // Hide all other categories
+        }
     });
 }
 
