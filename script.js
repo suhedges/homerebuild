@@ -9,70 +9,78 @@ function capitalizeFirstLetter(string) {
 let mainCategorySelected = false;
 
 function filterCategories(category) {
-    const penultimateContainer = document.getElementById('penultimate-container');
-    const finalCategoryContainer = document.getElementById('final-category-container');
+    const penultimateLinks = document.getElementById('penultimate-links');
+    const penultimateSidebar = document.querySelector('.penultimate-sidebar');
+    const mainSidebar = document.querySelector('.main-sidebar');
     const initialMessage = document.getElementById('initial-message');
-    const allCategoryGroups = document.querySelectorAll('.category-group-container');
-    const categoryGroup = document.querySelector(`.category-group-container[data-category="${category}"]`);
+    const finalCategoryContainer = document.getElementById('final-category-container');
 
-    // Hide all category groups
-    allCategoryGroups.forEach(group => {
-        group.style.display = 'none'; // Hide all categories
-    });
+    // Hide initial message
+    initialMessage.style.display = 'none';
 
-    // Clear previous penultimate and final category content
-    penultimateContainer.innerHTML = '';
+    // Clear previous penultimate links and final categories
+    penultimateLinks.innerHTML = '';
     finalCategoryContainer.innerHTML = '';
 
+    // Get the main category group
+    const categoryGroup = document.querySelector(`.category-group-container[data-category="${category}"]`);
     if (categoryGroup) {
-        // Show the selected category group
-        categoryGroup.style.display = 'block';
-
-        // Show the penultimate container and hide the initial message
-        penultimateContainer.style.display = 'grid';
-        initialMessage.style.display = 'none';
-
-        // Mark the main category as selected
-        mainCategorySelected = category;
-
-        // Collect and alphabetize penultimate categories
+        // Get penultimate categories
         const penultimateItems = [...categoryGroup.querySelectorAll('[data-penultimate]')];
-        penultimateItems.sort((a, b) => {
-            const nameA = capitalizeFirstLetter(a.dataset.penultimate);
-            const nameB = capitalizeFirstLetter(b.dataset.penultimate);
-            return nameA.localeCompare(nameB);
-        });
 
-        // Show only the first 8 penultimate items, hide the rest
-        penultimateItems.forEach((penultimate, index) => {
+        // Create buttons for each penultimate category
+        penultimateItems.forEach((penultimate) => {
             const penultimateName = penultimate.dataset.penultimate;
             const capitalizedPenultimateName = capitalizeFirstLetter(penultimateName);
 
             const penultimateButton = document.createElement('button');
             penultimateButton.classList.add('penultimate-button');
-            penultimateButton.dataset.penultimate = penultimateName;
             penultimateButton.textContent = capitalizedPenultimateName;
             penultimateButton.onclick = () => selectPenultimateCategory(penultimateName, category);
 
-            if (index < 4) {
-                penultimateContainer.appendChild(penultimateButton);
-            } else {
-                penultimateButton.classList.add('hidden-penultimate');
-                penultimateContainer.appendChild(penultimateButton);
-            }
+            penultimateLinks.appendChild(penultimateButton);
         });
 
-        // Add the "arrows_min_2.png" toggle button at the bottom, centered
-        if (penultimateItems.length > 8) {
-            const toggleButton = document.createElement('img');
-            toggleButton.src = 'arrows_min_2.png';
-            toggleButton.id = 'toggle-penultimate';
-            toggleButton.classList.add('toggle-arrow');
-            toggleButton.onclick = togglePenultimateVisibility;
-            penultimateContainer.appendChild(toggleButton);
-        }
+        // Show the penultimate sidebar and slide the main sidebar away
+        penultimateSidebar.classList.add('show');
+        mainSidebar.style.transform = 'translateX(-250px)';
     }
 }
+
+// Select a penultimate category and display its children
+function selectPenultimateCategory(penultimateName, parentName) {
+    const finalCategoryContainer = document.getElementById('final-category-container');
+    const allGroups = document.querySelectorAll('.category-group[data-penultimate]');
+
+    // Hide all final categories
+    allGroups.forEach(group => {
+        group.style.display = 'none';
+    });
+
+    // Clear the final category container before populating it
+    finalCategoryContainer.innerHTML = '';
+
+    // Show final categories related to the selected penultimate category
+    const selectedGroup = document.querySelector(`.category-group[data-penultimate="${penultimateName}"]`);
+    if (selectedGroup) {
+        const childItems = selectedGroup.querySelectorAll('.category-item');
+        childItems.forEach(item => {
+            finalCategoryContainer.appendChild(item.cloneNode(true));
+        });
+    }
+}
+
+// Add event listener for the "Back to Main Categories" button
+document.getElementById('back-button').addEventListener('click', () => {
+    const penultimateSidebar = document.querySelector('.penultimate-sidebar');
+    const mainSidebar = document.querySelector('.main-sidebar');
+
+    // Hide the penultimate sidebar by removing the 'show' class
+    penultimateSidebar.classList.remove('show');
+
+    // Reset the transform property of the main sidebar to move it back into view
+    mainSidebar.style.transform = 'translateX(0)';
+});
 
 function togglePenultimateVisibility() {
     const hiddenItems = document.querySelectorAll('.hidden-penultimate');
@@ -124,26 +132,45 @@ function togglePenultimateVisibility() {
 }
 
 function selectPenultimateCategory(penultimateName, parentName) {
-    // Deselect the last selected penultimate category
-    if (lastSelectedPenultimate) {
-        lastSelectedPenultimate.classList.remove('active');
+    const finalCategoryContainer = document.getElementById('final-category-container');
+    
+    // Hide all previously displayed final categories
+    finalCategoryContainer.innerHTML = '';
+
+    // Find the penultimate group that matches the selected penultimate name
+    const selectedGroup = document.querySelector(`.category-group[data-penultimate="${penultimateName}"]`);
+    
+    if (selectedGroup) {
+        const childItems = selectedGroup.querySelectorAll('.category-item');
+
+        // Append the child items (final categories) to the final category container
+        childItems.forEach(item => {
+            finalCategoryContainer.appendChild(item.cloneNode(true));
+        });
+    } else {
+        console.error(`No final categories found for penultimate: ${penultimateName}`);
     }
-
-    // Select the new penultimate category
-    const selectedElement = document.querySelector(`.penultimate-button[data-penultimate="${penultimateName}"]`);
-    selectedElement.classList.add('active');
-    lastSelectedPenultimate = selectedElement;
-
-    // Mark the penultimate category as selected
-    lastSelectedPenultimateCategory = penultimateName;
-
-    // Show final categories related to this penultimate category
-    const allGroups = document.querySelectorAll('.category-group[data-penultimate]');
-    allGroups.forEach(group => {
-        group.style.display = (group.dataset.penultimate === penultimateName) ? 'block' : 'none';
-    });
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+    const backButton = document.getElementById('back-button');
+    console.log(backButton);  // Log the element to verify if it's found
+
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            const penultimateSidebar = document.querySelector('.penultimate-sidebar');
+            const mainSidebar = document.querySelector('.main-sidebar');
+
+            // Hide the penultimate sidebar by removing the 'show' class
+            penultimateSidebar.classList.remove('show');
+
+            // Reset the transform property of the main sidebar to move it back into view
+            mainSidebar.style.transform = 'translateX(0)';
+        });
+    } else {
+        console.error("The 'back-button' element was not found in the DOM.");
+    }
+});
 
 function toggleSearchBar() {
     const searchButton = document.getElementById('search-button');
@@ -160,69 +187,75 @@ function toggleSearchBar() {
     }
 }
 
+let lastSelectedCategoryGroup = null; // To track the last displayed category group
+let lastSelectedPenultimateCategory = null; // To track the last penultimate category selected
+
 function filterBySearch() {
     const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
-    const categoryGroups = document.querySelectorAll('.category-group-container');
-    const penultimateContainer = document.getElementById('penultimate-container');
     const finalCategoryContainer = document.getElementById('final-category-container');
     const initialMessage = document.getElementById('initial-message');
+    const categoryItems = document.querySelectorAll('.category-item'); // All category items
 
-    // Hide the penultimate and final categories containers when search starts
-    penultimateContainer.style.display = 'none';
-    finalCategoryContainer.style.display = 'none'; // Hide the final category grid
-    finalCategoryContainer.innerHTML = ''; // Clear any previously displayed categories
-
-    // Hide all the category-group-container elements (penultimate + final categories)
-    categoryGroups.forEach(group => {
-        group.style.display = 'none'; // Hide the group container during search
-    });
+    // Clear the final category container
+    finalCategoryContainer.innerHTML = '';
 
     if (searchInput) {
-        // Hide initial message and display the search results
+        // Hide the initial message
         initialMessage.style.display = 'none';
-        finalCategoryContainer.style.display = 'grid'; // Show search results in the grid format
+
+        // Display search results container
+        finalCategoryContainer.style.display = 'grid';
         finalCategoryContainer.classList.add('search-results');
 
-        // Iterate over all category groups and find matching final categories
-        categoryGroups.forEach(group => {
-            const penultimateGroups = group.querySelectorAll('.category-group');
-            penultimateGroups.forEach(penultimateGroup => {
-                const childItems = penultimateGroup.querySelectorAll('.category-item');
-                childItems.forEach(item => {
-                    const itemName = item.querySelector('.category-name').textContent.toLowerCase().trim();
-                    if (itemName.includes(searchInput)) {
-                        // Append matching items to the final category container (search results)
-                        finalCategoryContainer.appendChild(item.cloneNode(true));
-                    }
-                });
-            });
+        // Filter and show matching categories
+        let matchesFound = false;
+        categoryItems.forEach(item => {
+            const itemName = item.querySelector('.category-name').textContent.toLowerCase().trim();
+            if (itemName.includes(searchInput)) {
+                finalCategoryContainer.appendChild(item.cloneNode(true));
+                matchesFound = true;
+            }
         });
 
-        // If no results are found, show a message
-        if (!finalCategoryContainer.hasChildNodes()) {
+        // If no matches found, display a message
+        if (!matchesFound) {
             finalCategoryContainer.innerHTML = '<p>No matching categories found.</p>';
         }
     } else {
-        // Restore previous content when search is cleared (e.g., backspaced)
-        finalCategoryContainer.innerHTML = ''; // Clear the search results
+        // If the search input is cleared, restore the previous state
         finalCategoryContainer.classList.remove('search-results');
+        finalCategoryContainer.innerHTML = ''; // Clear search results
 
-        // Restore the correct state based on previous selections
-        if (mainCategorySelected && lastSelectedPenultimateCategory) {
-            // If a main category and penultimate category were selected, restore them
-            const categoryGroup = document.querySelector(`.category-group-container[data-category="${mainCategorySelected}"]`);
-            categoryGroup.style.display = 'block'; // Show the main category group
-            penultimateContainer.style.display = 'grid'; // Show penultimate options
-            selectPenultimateCategory(lastSelectedPenultimateCategory, mainCategorySelected);
-        } else if (mainCategorySelected) {
-            // If only a main category was selected, restore it
-            const categoryGroup = document.querySelector(`.category-group-container[data-category="${mainCategorySelected}"]`);
-            categoryGroup.style.display = 'block'; // Show the main category group
-            penultimateContainer.style.display = 'grid'; // Show penultimate options
+        if (lastSelectedPenultimateCategory && lastSelectedCategoryGroup) {
+            // If a category was previously selected, restore the penultimate and final categories
+            lastSelectedCategoryGroup.style.display = 'block'; // Show the main category group
+            selectPenultimateCategory(lastSelectedPenultimateCategory, lastSelectedCategoryGroup.dataset.category);
         } else {
-            // If no category was selected, show the initial message
+            // If no category was selected, show the initial "Select a Category" message
             initialMessage.style.display = 'flex';
         }
+    }
+}
+
+// This function will be called when selecting a penultimate category
+function selectPenultimateCategory(penultimateName, parentName) {
+    const finalCategoryContainer = document.getElementById('final-category-container');
+    const selectedGroup = document.querySelector(`.category-group[data-penultimate="${penultimateName}"]`);
+
+    // Clear previously displayed categories
+    finalCategoryContainer.innerHTML = '';
+
+    if (selectedGroup) {
+        const childItems = selectedGroup.querySelectorAll('.category-item');
+
+        // Append the child items (final categories) to the final category container
+        childItems.forEach(item => {
+            finalCategoryContainer.appendChild(item.cloneNode(true));
+        });
+
+        // Store the selected penultimate and category group to restore later if needed
+        lastSelectedPenultimateCategory = penultimateName;
+        lastSelectedCategoryGroup = document.querySelector(`.category-group-container[data-category="${parentName}"]`);
     }
 }
 
@@ -292,19 +325,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }, true);
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('search-button');
     const searchBar = document.getElementById('search-bar');
     const searchInput = document.getElementById('search-input');
     const minimizeSearch = document.getElementById('minimize-search');
+    const clearSearch = document.getElementById('clear-search');
 
-    if (searchButton && searchBar && searchInput && minimizeSearch) {
+    if (searchButton && searchBar && searchInput && minimizeSearch && clearSearch) {
         searchButton.addEventListener('click', function() {
             searchBar.classList.add('expanded');
             searchBar.style.display = 'flex';
             searchButton.style.display = 'none';
 
-            // Delay focusing the input to allow the search bar to fully expand
             setTimeout(() => {
                 searchInput.focus();
             }, 300);  // Adjust the delay time if necessary
@@ -317,6 +350,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         searchInput.addEventListener('input', filterBySearch);
+
+        // Clear the search input when "x" is clicked and trigger search restore
+        clearSearch.addEventListener('click', function() {
+            searchInput.value = '';  // Clear the input
+            searchInput.dispatchEvent(new Event('input'));  // Trigger the input event to restore previous information
+        });
     } else {
         console.error("One or more elements not found. Please check the IDs and structure of your HTML.");
     }
