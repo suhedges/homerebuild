@@ -7,7 +7,7 @@ body {
     background-color: #ecf0f1;
     height: 100vh; 
 }
-.sidebar {
+.main-sidebar {
     width: 250px;
     font-family: 'Roboto', sans-serif;
     background-color: #053856;
@@ -15,11 +15,41 @@ body {
     font-size: 14px;
     padding: 20px;
     overflow-y: auto;
-    height: calc(100vh - 20px);
-    position: fixed; 
+    height: 100vh;
+    position: fixed;
     top: 0;
     left: 0;
+    transition: transform 0.3s ease-in-out;
 }
+
+.penultimate-sidebar {
+    width: 250px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #2c3e50;
+    font-size: 14px;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: translateX(-100%);  /* Moves the sidebar fully offscreen */
+    transition: transform 0.3s ease-in-out;
+    text-align: left;
+    align-items: left;
+    justify-content: left;
+}
+
+.penultimate-sidebar button,
+.penultimate-sidebar a {
+    text-align: left;
+}
+
+.penultimate-sidebar.show {
+    transform: translateX(0); /* Slides over the main sidebar */
+}
+
 .sidebar h2 {
     margin-top: 0;
 }
@@ -31,6 +61,52 @@ body {
     padding: 5px 0;
     cursor: pointer;
 }
+
+#back-button {
+    background-color: #f4f4f4; 
+    color: #3498db; 
+    border: 2px solid; 
+    border-color: #f4f4f4; 
+    border-radius: 8px; 
+    font-weight: bold;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.1s ease, opacity 0.2s, transform 0.2s; 
+    width: 90%;
+    height: 40px;
+    margin-bottom: 20px;
+}
+
+#back-button:hover {
+    background-color: #a9a9a9; 
+    color: #ffffff; 
+}
+
+#back-button.active {
+    background-color: #f7f7f7;
+    color: #e74c3c;
+}
+.sidebar a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: block;
+    margin: 2px 0;
+    height: 30px;
+    width: 90%;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+    border-radius: 5px;
+}
+
+.sidebar a:hover {
+    background-color: #032437; 
+    color: #ffffff; 
+}
+
 .content {
     flex: 1;
     padding: 20px;
@@ -137,7 +213,7 @@ body {
     padding-bottom: 20px;
     width: 80%;
     max-width: 800px;
-    background-color: #ffffff;
+    background-color: #f4f4f4;
     border: 1px solid #DBDBDB;
     border-radius: 8px;
     transition: max-height 0.6s ease-in-out, padding 0.3s ease-in-out;  
@@ -151,7 +227,7 @@ body {
 
 .penultimate-item {
     font-size: 12px;
-    color: #2c3e50;
+    color: #f4f4f4;
     cursor: pointer;
     transition: color 0.3s, font-size 0.3s;
 }
@@ -166,10 +242,10 @@ body {
 }
 
 .penultimate-button {
-    background-color: #ffffff;
+    background-color: #f4f4f4;
     color: #3498db;
     border: 2px solid;
-    border-color: #ffffff;
+    border-color: #f4f4f4;
     border-radius: 8px;
     padding: 5px;
     font-weight: bold;
@@ -177,7 +253,7 @@ body {
     text-align: center;
     cursor: pointer;
     transition: background-color 0.1s ease, opacity 0.2s, transform 0.2s;
-    width: 100%;
+    width: 90%;
     height: 40px;
     margin-bottom: -2px;
     transform: translateY(0); 
@@ -198,7 +274,7 @@ body {
 }
 
 .penultimate-button:hover {
-    background-color: #f4f4f4;
+    background-color: #e7e7e7;
 }
 
 .penultimate-button.active {
@@ -276,16 +352,19 @@ body {
 }
 
 .final-category-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 25px; 
     padding-top: 20px;
-    width: 100%;
-    max-width: 1000px;
-    text-align: center; 
+    justify-content: center; 
+    align-items: center;
+    width: 100%; 
+    max-width: 1200px;
+    margin-left: 20px; 
+    margin-right: auto; 
 }
+
 .final-category-container.search-results {
     display: grid;
     grid-template-columns: repeat(6, 1fr); /* Create 6 columns */
@@ -372,6 +451,31 @@ body {
     padding: 0 10px;
     font-size: 16px;
     color: #2c3e50;
+}
+
+.clear-search {
+    cursor: pointer;
+    font-size: 20px;
+    color: #333;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: color 0.2s;
+}
+
+.clear-search:hover {
+    color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+    .final-category-container {
+        grid-template-columns: repeat(2, 1fr); /* Create 2 columns for smaller screens */
+    }
+}
+
+@media (max-width: 1024px) {
+    .final-category-container {
+        grid-template-columns: repeat(3, 1fr); /* Create 3 columns for medium-sized screens */
+    }
 }
 
 @media (max-width: 768px) {
