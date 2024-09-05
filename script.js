@@ -207,12 +207,16 @@ function filterBySearch() {
         finalCategoryContainer.style.display = 'grid';
         finalCategoryContainer.classList.add('search-results');
 
+        // Use a Set to avoid duplicates
+        const addedCategories = new Set();
+
         // Filter and show matching categories
         let matchesFound = false;
         categoryItems.forEach(item => {
             const itemName = item.querySelector('.category-name').textContent.toLowerCase().trim();
-            if (itemName.includes(searchInput)) {
+            if (itemName.includes(searchInput) && !addedCategories.has(itemName)) {
                 finalCategoryContainer.appendChild(item.cloneNode(true));
+                addedCategories.add(itemName); // Add to Set to prevent duplicates
                 matchesFound = true;
             }
         });
