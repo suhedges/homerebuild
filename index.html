@@ -7,11 +7,11 @@
     <title>Category Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js"></script>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Categories</h2>
+    <!-- Main Category Sidebar -->
+    <div class="sidebar main-sidebar">
+        <h2>Main Categories</h2>
         
         <a href="javascript:void(0);" onclick="filterCategories('adhesives, sealants & lubrication')">
             Adhesives, Sealants & Lubrication
@@ -158,6 +158,14 @@
         </a>
         
     </div>
+
+    <!-- Penultimate Category Sidebar (initially hidden) -->
+    <div class="sidebar penultimate-sidebar">
+        <button id="back-button">← Back</button>
+        <h2>Subcategories</h2>
+        <div id="penultimate-links"></div>
+    </div>
+
     <div class="content">
         <div id="search-button" class="search-button">
             <img src="magnifying_glass.png" alt="Search">
@@ -165,8 +173,8 @@
         <div id="search-bar" class="search-bar">
             <img src="arrows_min.png" alt="Minimize" id="minimize-search">
             <input type="text" id="search-input" placeholder="Search categories...">
+             <span id="clear-search" class="clear-search">&times;</span>
         </div>
-        <div id="penultimate-container" class="penultimate-container" style="display:none;"></div>
         <div id="final-category-container" class="final-category-container"></div>
         <div id="initial-message" class="initial-message">
             <p>Select a Category</p>
@@ -5359,6 +5367,7 @@
             </div>
             
     </div>
+    <script src="script.js"></script>
 </body>
 </html>
     
