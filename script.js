@@ -30,17 +30,23 @@ function filterCategories(category) {
         // Get penultimate categories
         const penultimateItems = [...categoryGroup.querySelectorAll('[data-penultimate]')];
 
-        // Create buttons for each penultimate category
+        // Create buttons for each penultimate category in the sidebar and add them to the final category area with images
         penultimateItems.forEach((penultimate) => {
             const penultimateName = penultimate.dataset.penultimate;
             const capitalizedPenultimateName = capitalizeFirstLetter(penultimateName);
 
+            // Create a button for the penultimate sidebar
             const penultimateButton = document.createElement('button');
             penultimateButton.classList.add('penultimate-button');
             penultimateButton.textContent = capitalizedPenultimateName;
             penultimateButton.onclick = () => selectPenultimateCategory(penultimateName, category);
-
             penultimateLinks.appendChild(penultimateButton);
+
+            // Create an item for the final category area (with image and name)
+            const childItems = penultimate.querySelectorAll('.category-item');
+            childItems.forEach(item => {
+                finalCategoryContainer.appendChild(item.cloneNode(true));
+            });
         });
 
         // Show the penultimate sidebar and slide the main sidebar away
@@ -71,6 +77,22 @@ function selectPenultimateCategory(penultimateName, parentName) {
         });
     }
 }
+
+document.getElementById('all-subcategories-button').addEventListener('click', () => {
+    const finalCategoryContainer = document.getElementById('final-category-container');
+    const allCategoryGroups = document.querySelectorAll('.category-group[data-penultimate]');
+
+    // Clear previously displayed categories
+    finalCategoryContainer.innerHTML = '';
+
+    // Append all final categories from every penultimate category
+    allCategoryGroups.forEach(group => {
+        const childItems = group.querySelectorAll('.category-item');
+        childItems.forEach(item => {
+            finalCategoryContainer.appendChild(item.cloneNode(true));
+        });
+    });
+});
 
 // Add event listener for the "Back to Main Categories" button
 document.getElementById('back-button').addEventListener('click', () => {
@@ -203,6 +225,7 @@ function toggleSearchBar() {
 
 let lastSelectedCategoryGroup = null; // To track the last displayed category group
 let lastSelectedPenultimateCategory = null; // To track the last penultimate category selected
+let lastDisplayedCategories = null;
 
 function filterBySearch() {
     const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
@@ -211,8 +234,10 @@ function filterBySearch() {
     const categoryItems = document.querySelectorAll('.category-item'); // All category items
     const carouselContainer = document.getElementById('carousel-container'); // Get the carousel container
 
-    // Clear the final category container
-    finalCategoryContainer.innerHTML = '';
+    // If this is the first time searching, store the current content in the container
+    if (!lastDisplayedCategories && finalCategoryContainer.innerHTML.trim() !== "") {
+        lastDisplayedCategories = finalCategoryContainer.innerHTML;
+    }
 
     if (searchInput) {
         // Hide the initial message and carousel when searching
@@ -225,6 +250,9 @@ function filterBySearch() {
 
         // Use a Set to avoid duplicates
         const addedCategories = new Set();
+
+        // Clear the container for search results
+        finalCategoryContainer.innerHTML = '';
 
         // Filter and show matching categories
         let matchesFound = false;
@@ -244,16 +272,14 @@ function filterBySearch() {
     } else {
         // If the search input is cleared, restore the previous state
         finalCategoryContainer.classList.remove('search-results');
-        finalCategoryContainer.innerHTML = ''; // Clear search results
 
-        if (lastSelectedPenultimateCategory && lastSelectedCategoryGroup) {
-            // If a category was previously selected, restore the penultimate and final categories
-            lastSelectedCategoryGroup.style.display = 'block'; // Show the main category group
-            selectPenultimateCategory(lastSelectedPenultimateCategory, lastSelectedCategoryGroup.dataset.category);
+        // Restore the previously displayed content if it exists
+        if (lastDisplayedCategories) {
+            finalCategoryContainer.innerHTML = lastDisplayedCategories;
         } else {
-            // If no category was selected, show the initial "Select a Category" message and carousel
+            // If no content was displayed previously, show the initial "Select a Category" message
             initialMessage.style.display = 'flex';
-            carouselContainer.style.display = 'block';  // Show the carousel again
+            carouselContainer.style.display = 'block';
         }
     }
 }
@@ -274,12 +300,10 @@ function selectPenultimateCategory(penultimateName, parentName) {
             finalCategoryContainer.appendChild(item.cloneNode(true));
         });
 
-        // Store the selected penultimate and category group to restore later if needed
-        lastSelectedPenultimateCategory = penultimateName;
-        lastSelectedCategoryGroup = document.querySelector(`.category-group-container[data-category="${parentName}"]`);
+        // Store the displayed categories so that they can be restored after search
+        lastDisplayedCategories = finalCategoryContainer.innerHTML;
     }
 }
-
 function hideAllCategories() {
     const categoryGroups = document.querySelectorAll('.category-group-container');
     categoryGroups.forEach(group => {
@@ -361,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             setTimeout(() => {
                 searchInput.focus();
-            }, 300);  // Adjust the delay time if necessary
+            }, 300);  // Adjust the delay time
         });
 
         minimizeSearch.addEventListener('click', function() {
