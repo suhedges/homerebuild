@@ -1,3 +1,4 @@
+
 let lastSelectedPenultimate = null;
 let penultimateExpanded = false;
 
@@ -75,12 +76,6 @@ function selectPenultimateCategory(penultimateName, parentName) {
 document.getElementById('back-button').addEventListener('click', () => {
     const penultimateSidebar = document.querySelector('.penultimate-sidebar');
     const mainSidebar = document.querySelector('.main-sidebar');
-    const initialMessage = document.getElementById('initial-message');
-    const carouselContainer = document.getElementById('carousel-container'); // Get the carousel container
-
-    // Show initial message and carousel when going back
-    initialMessage.style.display = 'flex';
-    carouselContainer.style.display = 'block';
 
     // Hide the penultimate sidebar by removing the 'show' class
     penultimateSidebar.classList.remove('show');
@@ -138,7 +133,77 @@ function togglePenultimateVisibility() {
     }
 }
 
-// Add the filterBySearch function that hides the carousel during search
+function selectPenultimateCategory(penultimateName, parentName) {
+    const finalCategoryContainer = document.getElementById('final-category-container');
+    
+    // Hide all previously displayed final categories
+    finalCategoryContainer.innerHTML = '';
+
+    // Find the penultimate group that matches the selected penultimate name
+    const selectedGroup = document.querySelector(`.category-group[data-penultimate="${penultimateName}"]`);
+    
+    if (selectedGroup) {
+        const childItems = selectedGroup.querySelectorAll('.category-item');
+
+        // Append the child items (final categories) to the final category container
+        childItems.forEach(item => {
+            finalCategoryContainer.appendChild(item.cloneNode(true));
+        });
+    } else {
+        console.error(`No final categories found for penultimate: ${penultimateName}`);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const backButton = document.getElementById('back-button');
+    console.log(backButton);  // Log the element to verify if it's found
+
+    if (backButton) {
+        backButton.addEventListener('click', () => {
+            const penultimateSidebar = document.querySelector('.penultimate-sidebar');
+            const mainSidebar = document.querySelector('.main-sidebar');
+
+            // Hide the penultimate sidebar by removing the 'show' class
+            penultimateSidebar.classList.remove('show');
+
+            // Reset the transform property of the main sidebar to move it back into view
+            mainSidebar.style.transform = 'translateX(0)';
+        });
+    } else {
+        console.error("The 'back-button' element was not found in the DOM.");
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const initialMessage = document.getElementById('initial-message');
+    const carouselContainer = document.getElementById('carousel-container'); // Get the carousel container
+
+    // Ensure carousel is shown when the initial message is displayed
+    if (initialMessage.style.display !== 'none') {
+        carouselContainer.style.display = 'block';
+    } else {
+        carouselContainer.style.display = 'none';
+    }
+});
+
+function toggleSearchBar() {
+    const searchButton = document.getElementById('search-button');
+    const searchBar = document.getElementById('search-bar');
+
+    if (searchBar.classList.contains('expanded')) {
+        searchBar.classList.remove('expanded');
+        searchBar.style.display = 'none';
+        searchButton.style.display = 'flex';
+    } else {
+        searchBar.classList.add('expanded');
+        searchBar.style.display = 'flex';
+        searchButton.style.display = 'none';
+    }
+}
+
+let lastSelectedCategoryGroup = null; // To track the last displayed category group
+let lastSelectedPenultimateCategory = null; // To track the last penultimate category selected
+
 function filterBySearch() {
     const searchInput = document.getElementById('search-input').value.toLowerCase().trim();
     const finalCategoryContainer = document.getElementById('final-category-container');
@@ -193,7 +258,94 @@ function filterBySearch() {
     }
 }
 
-// Ensure that the "Clear Search" button functions properly
+// This function will be called when selecting a penultimate category
+function selectPenultimateCategory(penultimateName, parentName) {
+    const finalCategoryContainer = document.getElementById('final-category-container');
+    const selectedGroup = document.querySelector(`.category-group[data-penultimate="${penultimateName}"]`);
+
+    // Clear previously displayed categories
+    finalCategoryContainer.innerHTML = '';
+
+    if (selectedGroup) {
+        const childItems = selectedGroup.querySelectorAll('.category-item');
+
+        // Append the child items (final categories) to the final category container
+        childItems.forEach(item => {
+            finalCategoryContainer.appendChild(item.cloneNode(true));
+        });
+
+        // Store the selected penultimate and category group to restore later if needed
+        lastSelectedPenultimateCategory = penultimateName;
+        lastSelectedCategoryGroup = document.querySelector(`.category-group-container[data-category="${parentName}"]`);
+    }
+}
+
+function hideAllCategories() {
+    const categoryGroups = document.querySelectorAll('.category-group-container');
+    categoryGroups.forEach(group => {
+        group.style.display = 'none';
+    });
+}
+
+let tooltipTimeout;
+let isHovering = false; // Flag to track hover state
+
+function showTooltip(event) {
+    if (!isHovering) return; // Only show tooltip if hovering
+    const tooltip = document.getElementById('tooltip');
+    
+    // Set tooltip position centered at the bottom of the cursor
+    const tooltipX = event.pageX - (tooltip.offsetWidth / 2); // Center horizontally
+    const tooltipY = event.pageY + 20; // Position slightly below the cursor
+
+    tooltip.style.left = tooltipX + 'px';
+    tooltip.style.top = tooltipY + 'px';
+
+    // Show tooltip after 0.3s delay
+    tooltipTimeout = setTimeout(() => {
+        if (isHovering) { // Ensure tooltip only appears if still hovering
+            tooltip.style.visibility = 'visible';
+            tooltip.style.opacity = '1';
+        }
+    }, 300); // 0.3 seconds delay
+}
+
+function hideTooltip() {
+    clearTimeout(tooltipTimeout); // Clear any pending timeout
+    const tooltip = document.getElementById('tooltip');
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.opacity = '0';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const tooltip = document.createElement('div');
+    tooltip.id = 'tooltip';
+    tooltip.classList.add('tooltip');
+    tooltip.textContent = 'Click to View More';
+    document.body.appendChild(tooltip);
+
+    // Use event delegation to handle dynamically added toggle-arrow elements
+    document.addEventListener('mouseenter', function(event) {
+        if (event.target && event.target.id === 'toggle-penultimate') {
+            isHovering = true; // Set hover flag to true
+            showTooltip(event);
+        }
+    }, true);
+
+    document.addEventListener('mousemove', function(event) {
+        if (event.target && event.target.id === 'toggle-penultimate') {
+            showTooltip(event);
+        }
+    }, true);
+
+    document.addEventListener('mouseleave', function(event) {
+        if (event.target && event.target.id === 'toggle-penultimate') {
+            isHovering = false; // Set hover flag to false
+            hideTooltip();
+        }
+    }, true);
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     const searchButton = document.getElementById('search-button');
     const searchBar = document.getElementById('search-bar');
@@ -229,3 +381,4 @@ document.addEventListener('DOMContentLoaded', function () {
         console.error("One or more elements not found. Please check the IDs and structure of your HTML.");
     }
 });
+    
