@@ -87,8 +87,9 @@ body {
     font-weight: bold;
     padding: 10px;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 18px;
     text-align: center;
+    justify-content: center;
     cursor: pointer;
     transition: background-color 0.1s ease, opacity 0.2s, transform 0.2s; 
     width: 90%;
@@ -259,7 +260,7 @@ body {
 
 .penultimate-button {
     background-color: #f4f4f4;
-    color: #3498db;
+    color: #053856;
     border: 2px solid;
     border-color: #f4f4f4;
     border-radius: 8px;
@@ -369,7 +370,7 @@ body {
 
 .final-category-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
     margin-top: 25px; 
     padding-top: 20px;
@@ -481,6 +482,25 @@ body {
 .clear-search:hover {
     color: #e74c3c;
 }
+
+.all-subcategories-button {
+    background-color: #f4f4f4;
+    color: #053856;
+    border: none;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    width: 90%;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.all-subcategories-button:hover {
+    background-color: #a9a9a9;
+    color: #ffffff;
+}
+
 
 @media (max-width: 768px) {
     .final-category-container {
