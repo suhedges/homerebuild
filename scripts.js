@@ -230,8 +230,8 @@ document.addEventListener('DOMContentLoaded', function() {
         lockOutButton.id = 'lock-out';
         lockOutButton.src = 'locked.png';  // Set the initial image to "locked"
         lockOutButton.classList.add('sidebar-button'); // Add class for CSS positioning
-        penultimateSidebar.appendChild(lockOutButton);
-
+        document.body.appendChild(lockOutButton);  // Append to body for fixed positioning
+    
         lockOutButton.addEventListener('click', function() {
             // Check only the filename, not the full path
             const srcFileName = lockOutButton.src.split('/').pop();  // Get just the filename from the src
@@ -247,7 +247,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
     // Remove the "Lock Out" button
     function removeLockOutButton() {
         const lockOutButton = document.getElementById('lock-out');
