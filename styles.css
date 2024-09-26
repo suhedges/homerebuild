@@ -14,7 +14,7 @@ body {
     display: block;
     margin-left: 18px; 
     position: relative;
-    top: .1%;
+    top: -155px;
 }
 
 #select-category-text {
@@ -24,7 +24,7 @@ body {
     font-weight: bold;
     margin-top: -20px; 
     position: relative; 
-    top: 1%; 
+    top: -250px; 
 }
 
 
@@ -34,23 +34,24 @@ body {
     color: white;
     padding: 20px;
     position: fixed;
-    height: 100vh;
+    height: 120vh;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     z-index: 9;
     font-family: 'RobotoBlack', sans-serif;
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 #main-sidebar h2 {
     margin: 0;
     padding: 10px 0;
-    font-size: 24px;
+    font-size: 20px; /* Adjusted to reduce header size */
     text-align: center;
     position: sticky; 
-    top: 0; 
-    background-color: #053856; 
-    z-index: 10; 
-    font-family: 'RobotoBlack', sans-serif;
+    top: 0;
+    background-color: #053856;
+    z-index: 10;
 }
 
 #main-sidebar.hidden {
@@ -78,16 +79,19 @@ body {
 
 #penultimate-sidebar {
     width: 285px;
-    height: 100%;
     background-color: #ecf0f1;
     color: black;
     position: relative;
     left: 0;
     z-index: 0;
-    overflow-y: auto;
-    max-height: 100vh;
-    transition: transform 0.2s ease; 
+    overflow-y: hidden; /* Disable scrolling */
     font-family: 'RobotoCondensedBold', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 0px;  
+    transition: transform 0.2s ease;
 }
 
 /* Penultimate sidebar scrollbar styling */
@@ -127,10 +131,11 @@ body {
 .sidebar-button {
     position: fixed;
     left: 250px; 
-    width: 20px;
+    width: 25px;
     height: auto;
     opacity: 0.25;
-    top: 1.9%; 
+    top: 50%; 
+    transform: translateY(-680%);
     padding: 10px 20px;
     border: none;
     cursor: pointer;
@@ -175,13 +180,13 @@ body {
 
 #final-categories {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px; 
-    justify-content: center;
-    justify-items: center; 
+    grid-template-columns: repeat(8, 1fr); 
+    gap: 4px;
+    justify-items: center;
     align-items: center;
-    padding-bottom: 20px;
-    transition: grid-template-columns 0.1s ease; 
+    padding-bottom: 10px;
+    overflow: hidden;
+    margin-top: 70px;
 }
 
 #final-category-area.shifted {
@@ -190,67 +195,63 @@ body {
 }
 
 #final-categories.few-columns {
-    grid-template-columns: repeat(3, 1fr); 
+    grid-template-columns: repeat(8, 1fr); 
 }
 
 #final-categories.more-columns {
-    grid-template-columns: repeat(5, 1fr); 
+    grid-template-columns: repeat(8, 1fr); 
 }
 
 #final-categories div {
+    font-size: 0.6em; 
+    font-weight: bold;
+    word-wrap: break-word;
+    text-align: center;
+    max-width: 80%; 
+}
+
+#final-categories img {
+    max-width: 70%; /* Image takes up 70% of the container's width */
+    max-height: 40%; /* Image takes up 40% of the container's height */
+    object-fit: contain;
+    margin-bottom: 5px;
+}
+
+#final-categories a {
     display: flex;
-    width: 120px;
-    margin-top: 70px;
-    margin-left: 50px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    padding: 10px;
+    width: 80px;  /* Smaller width for category items */
+    height: 80px; /* Smaller height for category items */
+    border-radius: 5px;
+    padding: 5px;
     background-color: #ffffff;
-    box-shadow: none; 
-    width: 150px;
-}
-
-#final-categories div:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); 
-}
-
-#final-categories img {
-    width: 100px;
-    height: auto;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-#final-categories a {
-    display: block;
-    font-size: 12px;
-    color: #2c3e50;
+    margin: 0;
     text-decoration: none;
+    color: #2c3e50;
+    box-shadow: none;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
 #final-categories a:hover {
-    color: #81A3B7; /* Optional hover effect */
+    transform: translateY(-1px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+
 .main-category {
-    width: 85%; 
-    height: 25px; 
-    padding: 10px;
-    margin-bottom: 8px;
+    width: 100%;
+    padding: 2px; /* Reduce padding to allow more categories to fit */
+    margin-bottom: 4px;
     background-color: #053856;
     color: white;
     cursor: pointer;
     border-radius: 3px;
     text-align: left;
     transition: background-color 0.2s;
-    font-size: 14px;
+    font-size: 14px; /* Adjusted font size to fit more categories */
 }
 
 #main-categories {
@@ -258,27 +259,27 @@ body {
     padding: 0;
     margin: 0;
     flex-grow: 1;
-    overflow-y: auto; 
-    max-height: calc(100vh - 80px); /* Limit height for the category list to allow scrolling */
+    overflow-y: auto; /* Allow scrolling if there are too many main categories */  
+    overflow-x: hidden;
+    max-height: calc(100vh - 40px); /* Limit the max height to prevent overflowing */
 }
 
 .penultimate-category {
     width: 250px;
-    height: 32px;
+    height: auto; 
     display: flex;
     justify-content: flex-start;
-    padding-left: 10px; 
-    align-items: center; 
+    align-items: center;
     background-color: #ecf0f1;
-    color: #2d2d2d; 
-    text-align: center;
+    color: #2d2d2d;
+    text-align: left;
     border-radius: 3px;
-    margin-bottom: 10px; 
+    margin-bottom: 1px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: bold;
+    padding: 4px; /* Add padding to make categories more readable */
 }
-
 #search-button {
     position: fixed;
     top: 20px;
@@ -382,19 +383,5 @@ li {
 .penultimate-category:hover {
     background-color: #c3c9cb;
     color: #053856; 
-}
-
-#go-back {
-    position: relative;  
-    top: 20px; 
-    left: 20px; 
-    margin-bottom: 20px; 
-    cursor: pointer;
-    z-index: 10;  
-    background-color: #ecf0f1;  
-    padding: 5px;
-    border-radius: 4px;  
-    border: 1px solid #34495e;  
-    display: block;  
 }
 
